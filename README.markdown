@@ -2,8 +2,13 @@ This repo contains my solutions to the original course.
 
 ## Progress
 
-  * [ ] Course.ExactlyOne
-  * [ ] Course.Validation
+### Read
+  * [x] Course.ExactlyOne
+  * [x] Course.Validation
+  * [x] Course.Core
+
+### Do
+  * [x] Course.Optional
   * [ ] Course.List
   * [ ] Course.Functor
   * [ ] Course.Applicative
