@@ -9,7 +9,7 @@ This repo contains my solutions to the original course.
 
 ### Do
   * [x] Course.Optional
-  * [ ] Course.List
+  * [x] Course.List
   * [ ] Course.Functor
   * [ ] Course.Applicative
   * [ ] Course.Monad
