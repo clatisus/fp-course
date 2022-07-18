@@ -10,7 +10,7 @@ This repo contains my solutions to the original course.
 ### Do
   * [x] Course.Optional
   * [x] Course.List
-  * [ ] Course.Functor
+  * [x] Course.Functor
   * [ ] Course.Applicative
   * [ ] Course.Monad
   * [ ] Course.FileIO
