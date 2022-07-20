@@ -14,7 +14,7 @@ This repo contains my solutions to the original course.
   * [x] Course.Applicative
   * [x] Course.Monad
   * [x] Course.FileIO
-  * [ ] Course.State
+  * [x] Course.State
   * [ ] Course.StateT
   * [ ] Course.Extend
   * [ ] Course.Comonad
