@@ -80,6 +80,8 @@ instance Extend Optional where
 --
 -- >>> cojoin Empty
 -- Empty
+--
+-- Control.Extend.duplicate
 cojoin ::
   Extend k =>
   k a
