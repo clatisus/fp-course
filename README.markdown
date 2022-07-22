@@ -16,7 +16,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.FileIO
   * [x] Course.State
   * [x] Course.StateT
-  * [ ] Course.Extend
+  * [x] Course.Extend
   * [ ] Course.Comonad
   * [ ] Course.Contravariant
   * [ ] Course.Compose
