@@ -1,4 +1,4 @@
-This repo contains my solutions to the original course.
+This repo contains my solutions to the [fp-course](https://github.com/system-f/fp-course).
 
 ## Progress
 
