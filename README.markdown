@@ -18,7 +18,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.StateT
   * [x] Course.Extend
   * [x] Course.Comonad
-  * [ ] Course.Contravariant
+  * [x] Course.Contravariant
   * [ ] Course.Compose
   * [ ] Course.Traversable
   * [ ] Course.ListZipper
