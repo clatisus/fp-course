@@ -21,7 +21,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.Contravariant
   * [x] Course.Compose
   * [x] Course.Traversable
-  * [ ] Course.ListZipper
+  * [x] Course.ListZipper
   * [ ] Course.Parser (see also Course.Person for the parsing rules)
   * [ ] Course.MoreParser
   * [ ] Course.JsonParser
