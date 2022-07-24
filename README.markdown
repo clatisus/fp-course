@@ -20,7 +20,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.Comonad
   * [x] Course.Contravariant
   * [x] Course.Compose
-  * [ ] Course.Traversable
+  * [x] Course.Traversable
   * [ ] Course.ListZipper
   * [ ] Course.Parser (see also Course.Person for the parsing rules)
   * [ ] Course.MoreParser
