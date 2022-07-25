@@ -22,7 +22,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.Compose
   * [x] Course.Traversable
   * [x] Course.ListZipper
-  * [ ] Course.Parser (see also Course.Person for the parsing rules)
+  * [x] Course.Parser (see also Course.Person for the parsing rules)
   * [ ] Course.MoreParser
   * [ ] Course.JsonParser
   * [ ] Course.Interactive
