@@ -18,7 +18,8 @@ vooid ::
   m a
   -> m ()
 vooid =
-  (<$>) (const ())
+--  (<$>) (const ())
+  (() <$)
 
 -- | A version of @bind@ that ignores the result of the effect.
 (>-) ::
@@ -27,7 +28,8 @@ vooid =
   -> m b
   -> m b
 (>-) a =
-  (>>=) a . const
+--  (>>=) a . const
+  (a >>=) . const
 
 -- | Runs an action until a result of that action satisfies a given predicate.
 untilM ::
@@ -83,7 +85,10 @@ data Op =
 convertInteractive ::
   IO ()
 convertInteractive =
-  error "todo: Course.Interactive#convertInteractive"
+  putStr "Enter a String to upper-case: " >-
+  getLine >>= \line ->
+  putStrLn (toUpper <$> line) >-
+  putStrLn ""
 
 -- |
 --
@@ -111,7 +116,12 @@ convertInteractive =
 reverseInteractive ::
   IO ()
 reverseInteractive =
-  error "todo: Course.Interactive#reverseInteractive"
+  putStr "Enter a file name to reverse: " >-
+  getLine >>= \rf ->
+  putStr "Enter a file name to write the reversed file: " >-
+  getLine >>= \wf ->
+  (readFile rf >>= writeFile wf . reverse) >-
+  putStrLn ""
 
 -- |
 --
@@ -137,7 +147,17 @@ reverseInteractive =
 encodeInteractive ::
   IO ()
 encodeInteractive =
-  error "todo: Course.Interactive#encodeInteractive"
+  let encode :: Chars -> Chars
+      encode cs = cs >>= \c ->
+        case c of
+          ' ' -> "%20"
+          '\t' -> "%09"
+          '\"' -> "%22"
+          _ -> c :. Nil
+  in putStr "Enter a URL to encode: " >-
+     getLine >>= \url ->
+     putStrLn (encode url) >-
+     putStrLn ""
 
 interactive ::
   IO ()
