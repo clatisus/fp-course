@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE LambdaCase #-}
 
 {-
 
@@ -175,6 +176,20 @@ illion =
      , "novemdecillion"
      ] ++ lift2 ((++) =<<) preillion postillion
 
+-- List a :: Chars
+-- (++) :: List a -> List a -> List a
+-- (=<<) :: Monad k => (a' -> k b') -> k a' -> k b'
+-- a' :: List a
+-- k b' :: List a -> List a
+--   k :: (->) List a
+--   b' :: List a
+-- k a' :: List a -> List a
+-- ((++) =<<) :: k a' -> k b' :: (List a -> List a) -> List a -> List a
+-- (lift2 ((++) =<<))
+--   :: Applicative k =>
+--      k (List a -> List a) -> k (List a) -> k (List a)
+-- `lift2` here lift the function to list context, so we have all possible combinations
+
 -- A data type representing the digits zero to nine.
 data Digit =
   Zero
@@ -189,29 +204,21 @@ data Digit =
   | Nine
   deriving (Eq, Ord)
 
-showDigit ::
-  Digit
-  -> Chars
-showDigit Zero =
-  "zero"
-showDigit One =
-  "one"
-showDigit Two =
-  "two"
-showDigit Three =
-  "three"
-showDigit Four =
-  "four"
-showDigit Five =
-  "five"
-showDigit Six =
-  "six"
-showDigit Seven =
-  "seven"
-showDigit Eight =
-  "eight"
-showDigit Nine =
-  "nine"
+instance Show Digit where
+  show = \case
+    Zero -> "zero"
+    One -> "one"
+    Two -> "two"
+    Three -> "three"
+    Four -> "four"
+    Five -> "five"
+    Six -> "six"
+    Seven -> "seven"
+    Eight -> "eight"
+    Nine -> "nine"
+
+showDigit :: Digit -> Chars
+showDigit = listh . show
 
 -- A data type representing one, two or three digits, which may be useful for grouping.
 data Digit3 =
@@ -320,8 +327,92 @@ fromChar _ =
 --
 -- >>> dollars "456789123456789012345678901234567890123456789012345678901234567890.12"
 -- "four hundred and fifty-six vigintillion seven hundred and eighty-nine novemdecillion one hundred and twenty-three octodecillion four hundred and fifty-six septendecillion seven hundred and eighty-nine sexdecillion twelve quindecillion three hundred and forty-five quattuordecillion six hundred and seventy-eight tredecillion nine hundred and one duodecillion two hundred and thirty-four undecillion five hundred and sixty-seven decillion eight hundred and ninety nonillion one hundred and twenty-three octillion four hundred and fifty-six septillion seven hundred and eighty-nine sextillion twelve quintillion three hundred and forty-five quadrillion six hundred and seventy-eight trillion nine hundred and one billion two hundred and thirty-four million five hundred and sixty-seven thousand eight hundred and ninety dollars and twelve cents"
-dollars ::
-  Chars
-  -> Chars
-dollars =
-  error "todo: Course.Cheque#dollars"
+
+showDigit3 :: Digit3 -> Chars
+showDigit3 d =
+    let x .++. y = x ++ if y == Zero then Nil else '-' :. showDigit y
+    in case d of
+        D1 a -> showDigit a
+        D2 Zero b -> showDigit3 (D1 b)
+        D2 One b -> case b of
+                      Zero -> "ten"
+                      One -> "eleven"
+                      Two -> "twelve"
+                      Three -> "thirteen"
+                      Four -> "fourteen"
+                      Five -> "fifteen"
+                      Six -> "sixteen"
+                      Seven -> "seventeen"
+                      Eight -> "eighteen"
+                      Nine -> "nineteen"
+        D2 Two b -> "twenty" .++. b
+        D2 Three b -> "thirty" .++. b
+        D2 Four b -> "forty" .++. b
+        D2 Five b -> "fifty" .++. b
+        D2 Six b -> "sixty" .++. b
+        D2 Seven b -> "seventy" .++. b
+        D2 Eight b -> "eighty" .++. b
+        D2 Nine b -> "ninety" .++. b
+        D3 Zero Zero Zero -> ""
+        D3 Zero b c -> showDigit3 (D2 b c)
+        D3 a Zero Zero -> showDigit a ++ " hundred"
+        D3 a b c -> showDigit a ++ " hundred and " ++ showDigit3 (D2 b c)
+
+-- >> toDot "123.45"
+-- ([three,two,one],"45")
+-- >> toDot "123"
+-- ([three,two,one],"")
+-- >> toDot ""
+-- ([],"")
+toDot :: Chars -> (List Digit, Chars)
+toDot =
+  let toDot' x Nil = (x, Nil)
+      toDot' x (h:.t) =
+        let move = case fromChar h of
+                     Full n -> toDot' . (n :.)
+                     Empty -> if h == '.'
+                                  then
+                                    (,)
+                                  else
+                                     toDot'
+        in move x t
+  in toDot' Nil
+
+illionate :: List Digit -> Chars
+illionate =
+  let space "" = ""
+      space x = ' ' :. x
+
+      --          accumulator |current illion|   digits  |  result
+      todigits :: List Chars -> List Chars -> List Digit -> List Chars
+      todigits acc _ Nil = acc
+      todigits _ Nil _ = error "unsupported illion"
+      todigits acc (_:.is) (Zero:.Zero:.Zero:.t) =
+        todigits acc is t
+      todigits acc (i:.is) (q:.r:.s:.t) =
+        todigits ((showDigit3 (D3 s r q) ++ space i) :. acc) is t
+      todigits acc (_:.is) (Zero:.Zero:._) =
+        acc
+      todigits acc (i:._) (r:.s:._) =
+        (showDigit3 (D2 s r) ++ space i) :. acc
+      todigits acc (_:.is) (Zero:._) =
+        acc
+      todigits acc (i:._) (s:._) =
+        (showDigit3 (D1 s) ++ space i) :. acc
+  in unwords . todigits Nil illion
+
+dollars :: Chars -> Chars
+dollars x =
+  let (d, c) = toDot (dropWhile (`notElem` ('.' :. listh ['1'..'9'])) x)
+      c' =
+        case listOptional fromChar c of
+          Nil -> "zero cents"
+          (Zero:.One:.Nil) -> "one cent"
+          (a:.b:._) -> showDigit3 (D2 a b) ++ " cents"
+          (a:._) -> showDigit3 (D2 a Zero) ++ " cents"
+      d' =
+        case d of
+          Nil -> "zero dollars"
+          (One:.Nil) -> "one dollar"
+          _ -> illionate d ++ " dollars"
+  in d' ++ " and " ++ c'
