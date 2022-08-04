@@ -1,6 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Course.Anagrams where
 
@@ -23,6 +22,11 @@ Functions that might help
 -
 * on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
 
+on b u x y runs the binary function b on the results of
+applying unary function u to two arguments x and y.
+From the opposite perspective, it transforms two inputs
+and combines the outputs.
+
 -}
 
 
@@ -32,13 +36,14 @@ anagrams ::
   Chars
   -> FilePath
   -> IO (List Chars)
-anagrams =
-  error "todo: Course.Anagrams#anagrams"
+anagrams str = ((intersectBy equalIgnoringCase (permutations str) . lines) <$>) . readFile
+
+-- >> anagrams "abc" "share/dictionary.txt"
+-- ["abc","cba","cab"]
 
 -- Compare two strings for equality, ignoring case
 equalIgnoringCase ::
   Chars
   -> Chars
   -> Bool
-equalIgnoringCase =
-  error "todo: Course.Anagrams#equalIgnoringCase"
+equalIgnoringCase = (==) `on` (toUpper <$>)
