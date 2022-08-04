@@ -16,13 +16,22 @@ fastAnagrams ::
   Chars
   -> FilePath
   -> IO (List Chars)
-fastAnagrams =
-  error "todo: Course.FastAnagrams#fastAnagrams"
+fastAnagrams str fp = filter' (permutations str) . S.fromList . hlist . (NoCaseString <$>) . lines <$> readFile fp
+  where member' :: S.Set NoCaseString -> Chars -> Bool
+        member' = flip $ S.member . NoCaseString
+        filter' :: List Chars -> S.Set NoCaseString -> List Chars
+        filter' = flip (filter . member')
+
+-- >> fastAnagrams "abc" "share/dictionary.txt"
+-- ["abc","cba","cab"]
 
 newtype NoCaseString =
   NoCaseString {
     ncString :: Chars
   }
+
+instance Ord NoCaseString where
+  (<=) = (<=) `on` map toLower . ncString
 
 instance Eq NoCaseString where
   (==) = (==) `on` map toLower . ncString
