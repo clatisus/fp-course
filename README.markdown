@@ -29,6 +29,7 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.Anagrams
   * [ ] Course.FastAnagrams
   * [ ] Course.Cheque
+  * [ ] Course.Alternative
   * [ ] projects/
 
 
