@@ -30,6 +30,5 @@ This repo contains my solutions to the [fp-course](https://github.com/system-f/f
   * [x] Course.FastAnagrams
   * [x] Course.Cheque
   * [x] Course.Alternative
-  * [ ] projects/
 
 
